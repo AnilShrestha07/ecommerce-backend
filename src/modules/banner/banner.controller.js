@@ -26,7 +26,7 @@ class BannerController{
             let filter = {};
             if(req.query['search']) {
               filter = {
-                name: new RegExp(req.query.search, 'i'),
+                title: new RegExp(req.query.search, 'i'),
               };
             }
             let {data, pagination} = await bannerSvc.getAllList(req.query,filter);
@@ -42,7 +42,7 @@ class BannerController{
     }
     #validateBannerById = async(id) => {
         this.#bannerDetail = await bannerSvc.getSingleRowByFilter({
-          _id: id
+          id: id
         })
         if (!this.#bannerDetail) {
           throw {
@@ -73,7 +73,7 @@ class BannerController{
           // payload 
           let payload = await bannerSvc.transformUpdatePayload(req, this.#bannerDetail);
           const updateData = await bannerSvc.updateSingleDataByFilter({
-            _id: this.#bannerDetail._id
+            id: this.#bannerDetail.id
           }, payload)
           res.json({
             data: updateData,
@@ -90,7 +90,7 @@ class BannerController{
           await this.#validateBannerById(req.params.id);
     
           const del = await bannerSvc.deleteSingleRowByFilter({
-            _id: this.#bannerDetail._id
+            id: this.#bannerDetail.id
           })
     
           res.json({
@@ -115,7 +115,7 @@ class BannerController{
           if (req.query["search"]) {
             filter = {
               ...filter,
-              name: new RegExp(req.query.search, "i"),
+              title: new RegExp(req.query.search, "i"),
             };
           }
           let { data, pagination } = await bannerSvc.getAllList(req.query, filter);

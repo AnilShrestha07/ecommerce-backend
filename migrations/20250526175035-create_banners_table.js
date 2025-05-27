@@ -14,7 +14,7 @@ module.exports = {
         type: Sequelize.UUID,
         require: true,
         primaryKey: true,
-        default: Sequelize.UUID
+        default: Sequelize.UUIDV4()
       },
       title:{
         type: Sequelize.STRING,

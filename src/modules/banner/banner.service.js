@@ -32,8 +32,8 @@ class BannerService{
       };
     createBanner = async(payload) =>{
         try {
-            const banner = new BannerModel(payload)
-            return await banner.save()
+            const banner = await BannerModel.create(payload)
+            return banner;
         } catch (exception) {
             throw(exception)
         }
@@ -44,13 +44,13 @@ class BannerService{
             let page = +query.page || 1;
       
             let skip = (page - 1) * limit;
-            let allData = await BannerModel.find(filter)
-            .populate("createdBy", ["_id", "name", "email", "role", "image"])
-            .populate("updatedBy", ["_id", "name", "email", "role", "image"])
-            .sort({ createdAt: "desc" })
-            .skip(skip)
-            .limit(limit);
-      let count = await BannerModel.countDocuments(filter);
+
+            let {rows: allData, count} = await BannerModel.findAndCountAll({
+              where: filter,
+              offset: skip,
+              limit: limit
+            })
+            
 
             return {
                 data: allData,
@@ -67,9 +67,10 @@ class BannerService{
     
     getSingleRowByFilter = async (filter) => {
     try {
-      let detail = await BannerModel.findOne(filter)
-        .populate("createdBy", ["_id", "name", "email", "role", "image"])
-        .populate("updatedBy", ["_id", "name", "email", "role", "image"]);
+      let detail = await BannerModel.findOne({
+        where: filter
+      })
+      
       return detail;
     } catch (exception) {
       throw exception;
@@ -77,19 +78,24 @@ class BannerService{
     };
     updateSingleDataByFilter = async (filter, data) => {
         try {
-          const update = await BannerModel.findOneAndUpdate(
-            filter,
-            { $set: data },
-            { new: true }
-          );
-          return update;
-        } catch (exception) {
+const [affectedCount, affectedRows] = await BannerModel.update(data, {
+      where: filter,
+      returning: true,
+    });
+
+    if (affectedCount === 0) {
+      return null; // or throw new Error("Banner not found");
+    }
+
+    return affectedRows[0];        } catch (exception) {
           throw exception;
         }
     };
     deleteSingleRowByFilter = async(filter) => {
         try {
-          const data = await BannerModel.findOneAndDelete(filter)
+          const data = await BannerModel.destroy({
+            where: filter
+          })
           return data;
         } catch(exception) {
           throw exception

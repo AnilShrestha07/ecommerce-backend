@@ -1,5 +1,7 @@
 const express = require("express");
 const router = require("./router.config");
+const sequelize = require("./pg.config")
+
 require("./mongodb.config")
 const cors = require("cors");
 const { default: rateLimit } = require("express-rate-limit");
@@ -7,7 +9,15 @@ const { default: helmet } = require("helmet");
 
 
 
-
+const testDb = async()=>{
+    try {
+        await sequelize.authenticate()
+        console.log("********** Postgres connected successfully ******")
+    } catch (exception) {
+        console.log("Error connecting Postgresaql")
+    }
+}
+    testDb()
 
 
 // application

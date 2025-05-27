@@ -18,6 +18,15 @@ const MongodbConfig ={
     url: process.env.MONGODB_URL,
     dbName: process.env.MONGODB_DBNAME 
 }
+
+const PostgresConfig = {
+    dialect: process.env.DB_DIALECT,
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    dbName: process.env.DB_NAME,
+    port: process.env.DB_PORT
+}
 const AppConfig ={
     appUrl: process.env.APP_URL, 
     frontendUrl: process.env.FRONTEND_URL,
@@ -81,5 +90,6 @@ module.exports = {
     AppConfig,
     OrderDetailStatus,
     OrderStatus,
-    PaymentMethods
+    PaymentMethods,
+    PostgresConfig
 }
