@@ -20,4 +20,3 @@ productRouter.put("/:id", loginCheck([UserRoles.ADMIN, UserRoles.SELLER]), uploa
 productRouter.delete("/:id", loginCheck([UserRoles.ADMIN, UserRoles.SELLER]), productCtrl.productDeleteById);      // update a product
 module.exports = productRouter
 
-hello
