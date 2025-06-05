@@ -19,3 +19,4 @@ productRouter.get("/:id", loginCheck([UserRoles.ADMIN, UserRoles.SELLER]), produ
 productRouter.put("/:id", loginCheck([UserRoles.ADMIN, UserRoles.SELLER]), uploader().array('images'), bodyValidator(ProductDTO),  productCtrl.productUpdateById);      // update a product
 productRouter.delete("/:id", loginCheck([UserRoles.ADMIN, UserRoles.SELLER]), productCtrl.productDeleteById);      // update a product
 module.exports = productRouter
+
