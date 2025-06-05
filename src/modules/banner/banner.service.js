@@ -40,7 +40,7 @@ class BannerService{
     };
     getAllList = async(query, filter = {})=>{
         try {
-            let limit = +query.limit || 10;
+            let limit = +query.pageSize || 10;
             let page = +query.page || 1;
       
             let skip = (page - 1) * limit;
@@ -56,7 +56,7 @@ class BannerService{
                 data: allData,
                 pagination: {
                   page: page,
-                  limit: limit,
+                  pageSize: limit,
                   total: count,
                 },
               };

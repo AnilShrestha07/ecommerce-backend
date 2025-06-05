@@ -1,6 +1,8 @@
 const { Status } = require("../../config/constants")
 const productSvc = require("../product/product.service")
 const bannerSvc = require("./banner.service")
+const { Op } = require("sequelize");
+
 
 class BannerController{
     #bannerDetail
@@ -21,25 +23,47 @@ class BannerController{
      }
 
 
-    listAllBanners = async (req,res, next)=>{
-        try {
-            let filter = {};
-            if(req.query['search']) {
-              filter = {
-                title: new RegExp(req.query.search, 'i'),
-              };
-            }
-            let {data, pagination} = await bannerSvc.getAllList(req.query,filter);
-            res.json({
-                data: data,
-                message: "Banner list",
-                status: "SUCCESS",
-                option: pagination
-            })
-        } catch (exception) {
-            next(exception)
-        }
+    // listAllBanners = async (req,res, next)=>{
+    //     try {
+    //         let filter = {};
+    //         if(req.query['search']) {
+    //           filter = {
+    //             title: new RegExp(req.query.search, 'i'),
+    //           };
+    //         }
+    //         let {data, pagination} = await bannerSvc.getAllList(req.query,filter);
+    //         res.json({
+    //             data: data,
+    //             message: "Banner list",
+    //             status: "SUCCESS",
+    //             option: pagination
+    //         })
+    //     } catch (exception) {
+    //         next(exception)
+    //     }
+    // }
+    listAllBanners = async (req, res, next) => {
+  try {
+    let filter = {};
+    if (req.query['search']) {
+      filter = {
+        title: {
+          [Op.iLike]: `%${req.query.search}%`,
+        },
+      };
     }
+    let { data, pagination } = await bannerSvc.getAllList(req.query, filter);
+    res.json({
+      data: data,
+      message: "Banner list",
+      status: "SUCCESS",
+      option: pagination,
+    });
+  } catch (exception) {
+    next(exception);
+  }
+};
+
     #validateBannerById = async(id) => {
         this.#bannerDetail = await bannerSvc.getSingleRowByFilter({
           id: id
